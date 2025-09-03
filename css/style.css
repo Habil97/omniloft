@@ -1,0 +1,116 @@
+/* Modern ve şık verveo teması için temel stiller */
+body {
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    background: #f5f7fa;
+    color: #222;
+}
+.logo {
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 2px;
+}
+header {
+    background: linear-gradient(90deg, #232526 0%, #414345 100%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.hero {
+    background: #e9ecef;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+.card {
+    height: 430px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+    background: #fff;
+}
+.card:hover {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+}
+.card-img-top {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    background: #fff;
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+}
+.card-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-bottom: 0;
+    min-height: 180px;
+    position: relative;
+}
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+.card-text {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 2 satırda kes */
+    -webkit-box-orient: vertical;
+    min-height: 2.6em;
+    max-height: 2.6em;
+}
+.card .d-flex.gap-2 {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+}
+.card .btn-gradient-premium {
+    min-width: 140px;
+    max-width: 180px;
+    padding: 0.5rem 1.5rem;
+    font-weight: bold;
+    border-radius: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: center;
+    white-space: nowrap;
+}
+.btn-primary {
+    background: #232526;
+    border: none;
+}
+.btn-outline-primary {
+    border-color: #232526;
+    color: #232526;
+}
+.btn-outline-primary:hover {
+    background: #232526;
+    color: #fff;
+}
+footer {
+    background: #232526;
+    color: #fff;
+}
+/* Sticky footer için ana içerik ve footer ayarları */
+.main-content-wrapper {
+    min-height: calc(100vh - 20px); /* footer yüksekliği kadar çıkarılır */
+    box-sizing: border-box;
+}
+.sticky-footer {
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    left: 0;
+}

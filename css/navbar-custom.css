@@ -1,0 +1,21 @@
+/* Sade, modern ve kullanıcı dostu navbar butonları için özel stil */
+.btn-navbar {
+    background: #fff;
+    color: #222;
+    border-radius: 1.5rem;
+    border: 1px solid #e0e0e0;
+    box-shadow: none;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    font-weight: 500;
+    font-size: 0.97rem;
+    padding: 0.35rem 1.1rem;
+    letter-spacing: 0.01em;
+}
+.btn-navbar:hover, .btn-navbar:focus {
+    background: #f0f4f8;
+    color: #185a9d;
+    border-color: #b0c4d6;
+    box-shadow: 0 2px 8px rgba(24,90,157,0.07);
+    outline: none;
+}

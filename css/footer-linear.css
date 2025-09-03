@@ -1,0 +1,58 @@
+/* Linear tarzı modern footer */
+.linear-footer {
+    background: #fff;
+    box-shadow: 0 -2px 16px rgba(24,90,157,0.07);
+    padding: 2.5rem 0 1.5rem 0;
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+    color: #222;
+}
+.linear-footer .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.linear-footer .footer-logo {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+.linear-footer .footer-section {
+    min-width: 160px;
+    margin-bottom: 1.5rem;
+}
+.linear-footer .footer-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.7rem;
+    color: #185a9d;
+}
+.linear-footer .footer-section-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+.linear-footer .footer-section-item {
+    margin-bottom: 0.4rem;
+}
+.linear-footer .footer-section-link {
+    color: #222;
+    text-decoration: none;
+    font-size: 0.97rem;
+    opacity: 0.8;
+    transition: color 0.2s, opacity 0.2s;
+}
+.linear-footer .footer-section-link:hover {
+    color: #185a9d;
+    opacity: 1;
+}
+@media (max-width: 900px) {
+    .linear-footer .footer-inner {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+}

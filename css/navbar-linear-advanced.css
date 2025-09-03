@@ -1,0 +1,78 @@
+/* Linear benzeri gelişmiş navbar için özel stil */
+.linear-navbar {
+    background: #fff;
+    box-shadow: 0 2px 16px rgba(24,90,157,0.07);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0.5rem 0;
+}
+.linear-navbar .logo {
+    font-weight: 700;
+    font-size: 1.35rem;
+    color: #185a9d;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.linear-navbar .menu-list {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0;
+    list-style: none;
+    padding-left: 0;
+}
+.linear-navbar .menu-link {
+    color: #222;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.35rem 1.2rem;
+    border-radius: 1.5rem;
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+.linear-navbar .menu-link:hover, .linear-navbar .menu-link:focus {
+    background: #f5f7fa;
+    color: #185a9d;
+    outline: none;
+}
+.linear-navbar .menu-btn {
+    color: #fff;
+    background: #185a9d;
+    border-radius: 1.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.35rem 1.2rem;
+    border: none;
+    margin-left: 0.5rem;
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+}
+.linear-navbar .menu-btn:hover, .linear-navbar .menu-btn:focus {
+    background: #43cea2;
+    color: #fff;
+    outline: none;
+}
+.linear-navbar .menu-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    margin-left: 1rem;
+    cursor: pointer;
+}
+@media (max-width: 991px) {
+    .linear-navbar .menu-list {
+        display: none;
+    }
+    .linear-navbar .menu-hamburger {
+        display: block;
+    }
+}
