@@ -1,4 +1,4 @@
-# Verveo E-Ticaret Sitesi
+# omniloft E-Ticaret Sitesi
 
 Bu proje ASP.NET Core MVC, SQL Server, HTML, CSS, JavaScript ve Bootstrap kullanılarak geliştirilmiştir. OOP prensiplerine uygun, modüler ve kolay değiştirilebilir bir yapıdadır.
 
@@ -24,3 +24,4 @@ Bu proje ASP.NET Core MVC, SQL Server, HTML, CSS, JavaScript ve Bootstrap kullan
 
 ## Katkı
 Kodlar kolay okunabilir ve değiştirilebilir olacak şekilde yazılmıştır. Katkı sağlamak için pull request gönderebilirsiniz.
+
