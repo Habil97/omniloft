@@ -1,0 +1,28 @@
+@model Verveo.Entities.ProductReview
+
+<h2>Yorum Düzenle</h2>
+<form asp-action="EditReview" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <div class="mb-2">
+        <label>Puan:</label>
+        <select name="Rating" class="form-select" required>
+            @for (int i = 1; i <= 5; i++)
+            {
+                if (Model.Rating == i)
+                {
+                    <option value="@i" selected="selected">@i</option>
+                }
+                else
+                {
+                    <option value="@i">@i</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="mb-2">
+        <label>Yorum:</label>
+        <textarea name="Comment" class="form-control" required>@Model.Comment</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <a asp-action="Profile" class="btn btn-secondary ms-2">Geri</a>
+</form>

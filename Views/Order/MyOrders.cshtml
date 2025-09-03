@@ -1,0 +1,35 @@
+@model IEnumerable<Verveo.Entities.Order>
+
+<h2>Siparişlerim</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tarih</th>
+            <th>Toplam</th>
+            <th>Durum</th>
+            <th>İade/Değişim</th>
+            <th>İade/Değişim Talebi Durumu</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.CreatedAt.ToString("g")</td>
+                <td>@order.Total ₺</td>
+                <td>@order.Status</td>
+                <td>
+                    <a href="/ReturnRequest/Create?orderId=@order.Id" class="btn btn-warning btn-sm">İade/Değişim Talebi Oluştur</a>
+                </td>
+                <td>
+                   <a href="/ReturnRequest/MyRequests" class="btn btn-warning">
+                       <i class="fas fa-undo-alt"></i> Görüntüle
+                   </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

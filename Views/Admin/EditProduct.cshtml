@@ -1,0 +1,120 @@
+@model Verveo.ViewModels.ProductFeatureViewModel
+@{
+    ViewData["Title"] = "Ürün Düzenle";
+}
+
+<div class="container py-5">
+    <h2 class="mb-4">Ürün Düzenle</h2>
+    @if (Model == null || Model.Product == null)
+    {
+        <div class="alert alert-danger">Ürün bulunamadı.</div>
+    }
+    else
+    {
+        <form asp-action="EditProduct" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="Product.Id" value="@Model.Product.Id" />
+            <div class="mb-3">
+                <label for="Name" class="form-label">Ürün Adı</label>
+                <input type="text" class="form-control" id="Name" name="Product.Name" value="@Model.Product.Name" required />
+            </div>
+            <div class="mb-3">
+                <label for="Description" class="form-label">Açıklama</label>
+                <input type="text" class="form-control" id="Description" name="Product.Description" value="@Model.Product.Description" />
+            </div>
+            <div class="mb-3">
+                <label for="Price" class="form-label">Fiyat</label>
+                <input type="number" step="0.01" class="form-control" id="Price" name="Product.Price" value="@Model.Product.Price" required />
+            </div>
+            <div class="mb-3">
+                <label for="CategoryId" class="form-label">Kategori</label>
+                @if (ViewBag.Categories == null)
+                {
+                    <div class="alert alert-danger">Kategori listesi yüklenemedi.</div>
+                }
+                else
+                {
+                    <select class="form-select" id="CategoryId" name="Product.CategoryId" required>
+                        @foreach (var category in ViewBag.Categories as List<Verveo.Entities.Category>)
+                        {
+                            <option value="@category.Id" selected="@(category.Id == Model.Product.CategoryId ? "selected" : null)">
+                                @category.Name
+                            </option>
+                        }
+                    </select>
+                }
+            </div>
+            <div class="mb-3">
+                <label for="ImageFile" class="form-label">Ürün Görseli</label>
+                <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" />
+                @if (!string.IsNullOrEmpty(Model.Product.ImagePath))
+                {
+                    <div class="mt-2">
+                        <img src="@Model.Product.ImagePath" alt="Mevcut Görsel" style="max-width:120px;max-height:120px;" />
+                    </div>
+                }
+            </div>
+            <div class="mb-3">
+                <label for="GalleryFiles" class="form-label">Galeri Görselleri</label>
+                <input type="file" class="form-control" id="GalleryFiles" name="GalleryFiles" multiple accept="image/*" />
+            </div>
+            <div class="mb-3">
+                <label>Stok:</label>
+                <input type="number" name="Product.Stock" value="@Model.Product.Stock" class="form-control" min="0" />
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="IsActive" name="Product.IsActive" value="true" @(Model.Product.IsActive ? "checked" : "") />
+                <label class="form-check-label" for="IsActive">Aktif mi?</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="IsFeatured" name="Product.IsFeatured" value="true" @(Model.Product.IsFeatured ? "checked" : "") />
+                <label class="form-check-label" for="IsFeatured">Öne Çıkan mı?</label>
+            </div>
+
+            <div class="mb-3">
+                <label for="MetaTitle" class="form-label">SEO Başlık</label>
+                <input type="text" class="form-control" id="MetaTitle" name="Product.MetaTitle" value="@Model.Product.MetaTitle" maxlength="70" />
+            </div>
+            <div class="mb-3">
+                <label for="MetaDescription" class="form-label">SEO Açıklama</label>
+                <textarea class="form-control" id="MetaDescription" name="Product.MetaDescription" maxlength="160">@Model.Product.MetaDescription</textarea>
+            </div>
+
+            <h4 class="mt-5">Ürün Özellikleri</h4>
+            <div id="features-list">
+                @for (int i = 0; i < Model.Features.Count; i++)
+                {
+                    <div class="row mb-2">
+                        <div class="col">
+                            <input type="text" name="Features[@i].Name" value="@Model.Features[i].Name" class="form-control" placeholder="Özellik Adı" />
+                        </div>
+                        <div class="col">
+                            <input type="text" name="Features[@i].Value" value="@Model.Features[i].Value" class="form-control" placeholder="Özellik Değeri" />
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="d-flex gap-3 mb-3">
+                <button type="button" onclick="addFeature()" class="btn btn-secondary flex-fill" style="min-width:150px;">Özellik Ekle</button>
+                <button type="submit" class="btn btn-primary flex-fill" style="min-width:150px;">Kaydet</button>
+            </div>
+        </form>
+    }
+</div>
+
+<script>
+function addFeature() {
+    var list = document.getElementById('features-list');
+    var index = list.children.length;
+    var row = document.createElement('div');
+    row.className = 'row mb-2';
+    row.innerHTML = `
+        <div class="col">
+            <input type="text" name="Features[${index}].Name" class="form-control" placeholder="Özellik Adı" />
+        </div>
+        <div class="col">
+            <input type="text" name="Features[${index}].Value" class="form-control" placeholder="Özellik Değeri" />
+        </div>
+    `;
+    list.appendChild(row);
+}
+</script>

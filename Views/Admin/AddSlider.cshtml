@@ -1,0 +1,38 @@
+@model Verveo.Entities.Slider
+@{
+    ViewData["Title"] = "Slider Ekle";
+}
+<div class="container py-5">
+    <h2 class="mb-4">Yeni Slider Ekle</h2>
+    <form asp-action="AddSlider" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="Title" class="form-label">Başlık</label>
+            <input type="text" class="form-control" id="Title" name="Title" required />
+        </div>
+        <div class="mb-3">
+            <label for="Description" class="form-label">Açıklama</label>
+            <input type="text" class="form-control" id="Description" name="Description" />
+        </div>
+        <div class="mb-3">
+            <label for="ImageFile" class="form-label">Slider Görseli</label>
+            <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" />
+        </div>
+        <div class="mb-3">
+            <label for="ButtonText" class="form-label">Buton Metni</label>
+            <input type="text" class="form-control" id="ButtonText" name="ButtonText" />
+        </div>
+        <div class="mb-3">
+            <label for="ButtonUrl" class="form-label">Buton Linki</label>
+            <input type="text" class="form-control" id="ButtonUrl" name="ButtonUrl" />
+        </div>
+        <div class="mb-3">
+            <label for="Order" class="form-label">Sıra</label>
+            <input type="number" class="form-control" id="Order" name="Order" value="1" />
+        </div>
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="IsActive" name="IsActive" checked />
+            <label class="form-check-label" for="IsActive">Aktif mi?</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Ekle</button>
+    </form>
+</div>

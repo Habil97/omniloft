@@ -1,0 +1,137 @@
+@model Verveo.Entities.Cart
+@{
+    ViewData["Title"] = "Sepetim";
+    decimal subtotal = 0;
+    decimal shipping = 0;
+    decimal discount = 0;
+    decimal total = 0;
+
+    if (Model != null && Model.Items != null && Model.Items.Any())
+    {
+        subtotal = Model.Items.Sum(item => item.Product.Price * item.Quantity);
+        shipping = subtotal > 0 ? 49.90M : 0M;
+        var discountStr = Context.Session.GetString("CouponDiscount");
+        if (!string.IsNullOrEmpty(discountStr))
+        {
+            decimal.TryParse(discountStr, out discount);
+        }
+        total = subtotal + shipping;
+    }
+}
+<div class="container py-5">
+    @if (Model == null || Model.Items == null || !Model.Items.Any())
+    {
+        <div class="alert alert-info text-center my-5">
+            <h4>Sepetinizde ürün yok.</h4>
+            <a href="/" class="btn btn-primary mt-3">Alışverişe Devam Et</a>
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Ürün</th>
+                    <th>Birim Fiyat</th>
+                    <th>Adet</th>
+                    <th>Toplam</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    var price = item.Product?.Price ?? 0;
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Product.ImagePath))
+                            {
+                                <img src="@item.Product.ImagePath" alt="@item.Product.Name" style="width:60px;height:60px;object-fit:cover;border-radius:8px;margin-right:8px;vertical-align:middle;" />
+                            }
+                            <a href="@Url.Action("Details", "Product", new { id = item.ProductId })" style="font-weight:600;text-decoration:none;color:#185a9d;">
+                                @item.Product.Name
+                            </a>
+                            @if (item.Product.Stock == 0)
+                            {
+                                <span class="text-danger">Stok yok</span>
+                            }
+                        </td>
+                        <td>@price.ToString("C")</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <form asp-action="UpdateQuantity" asp-controller="Cart" method="post" class="d-inline-block me-1">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary" style="width:32px;height:32px;border-radius:50%;font-weight:bold;">-</button>
+                                </form>
+                                <span class="mx-2 fw-bold" style="min-width:32px;text-align:center;">@item.Quantity</span>
+                                <form asp-action="UpdateQuantity" asp-controller="Cart" method="post" class="d-inline-block ms-1">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary" style="width:32px;height:32px;border-radius:50%;font-weight:bold;">+</button>
+                                </form>
+                            </div>
+                        </td>
+                        <td>@(price * item.Quantity) TL</td>
+                        <td>
+                            <form asp-action="Remove" asp-controller="Cart" method="post">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <button type="submit" class="btn btn-sm btn-danger" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6zm3 .5a.5.5 0 0 1 .5-.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5z"/>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1H14a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <form asp-action="Clear" asp-controller="Cart" method="post">
+            <button type="submit" class="btn btn-gradient-premium px-4 py-2 fw-bold" style="text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:2rem;background:linear-gradient(90deg,#232526 0%,#414345 100%);color:#fff;border:none;">Sepeti Temizle</button>
+        </form>
+        <div class="mt-4 text-end">
+            <div class="container mb-5" style="display:flex;justify-content:flex-end;">
+                <div class="card p-4 shadow-sm" style="max-width:400px;width:100%;margin-bottom:32px;">
+                    <h5 class="fw-bold mb-3 text-center">Sepet Özeti</h5>
+                    <form asp-action="ApplyCoupon" method="post" class="mb-3">
+                        <div class="input-group">
+                            <input type="text" name="couponCode" class="form-control" placeholder="Kupon veya kampanya kodu" value="@ViewBag.AppliedCoupon" />
+                            <button type="submit" class="btn btn-gradient-premium fw-bold">Uygula</button>
+                        </div>
+                        @if (!string.IsNullOrEmpty(ViewBag.CouponMessage as string))
+                        {
+                            <div class="mt-2 text-success">@ViewBag.CouponMessage</div>
+                        }
+                    </form>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Ara Toplam:</span>
+                            <span>@subtotal.ToString("C", new System.Globalization.CultureInfo("tr-TR"))</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Kargo Ücreti:</span>
+                            <span>@(shipping > 0 ? shipping.ToString("C", new System.Globalization.CultureInfo("tr-TR")) : "Ücretsiz")</span>
+                    </div>
+                    @if (discount > 0)
+                    {
+                        <div class="d-flex justify-content-between mb-2 text-success">
+                            <span>İndirim:</span>
+                            <span>-@discount.ToString("C", new System.Globalization.CultureInfo("tr-TR"))</span>
+                        </div>
+                    }
+                    <hr />
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="fw-bold">Genel Toplam:</span>
+                            <span class="fw-bold">@((total - discount).ToString("C", new System.Globalization.CultureInfo("tr-TR")))</span>
+                        </div>
+                        <div class="d-grid gap-2 mt-4">
+                            <form asp-action="Checkout" asp-controller="Cart" method="get">
+                                <button type="submit" class="btn btn-success btn-lg fw-bold" style="border-radius:2rem;box-shadow:0 2px 8px rgba(0,0,0,0.08);">Alışverişi Tamamla</button>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

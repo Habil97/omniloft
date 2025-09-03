@@ -1,0 +1,56 @@
+@model List<Verveo.Entities.Category>
+@{
+    ViewData["Title"] = "Kategoriler";
+}
+
+<div class="container py-5">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <input type="text" id="categorySearch" class="form-control" placeholder="Kategori adına veya açıklamasına göre ara..." />
+        </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Kategoriler</h2>
+        <a href="/Admin/AddCategory" class="btn btn-success">Yeni Kategori Ekle</a>
+    </div>
+    <table class="table table-hover table-borderless shadow-sm rounded bg-white">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Ad</th>
+                <th>Açıklama</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody id="categoryTableBody">
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.Id</td>
+                    <td class="category-name">@category.Name</td>
+                    <td class="category-desc">@category.Description</td>
+                    <td>
+                        <a href="/Admin/EditCategory/@category.Id" class="btn btn-sm btn-primary me-2">Düzenle</a>
+                        <a href="/Admin/DeleteCategory/@category.Id" class="btn btn-sm btn-danger" onclick="return confirm('Silmek istediğinize emin misiniz?');">Sil</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('categorySearch');
+    const tableBody = document.getElementById('categoryTableBody');
+    searchInput.addEventListener('input', filterCategories);
+    function filterCategories() {
+        const search = searchInput.value.toLowerCase();
+        Array.from(tableBody.rows).forEach(row => {
+            const name = row.querySelector('.category-name').textContent.toLowerCase();
+            const desc = row.querySelector('.category-desc').textContent.toLowerCase();
+            const matchesSearch = name.includes(search) || desc.includes(search);
+            row.style.display = matchesSearch ? '' : 'none';
+        });
+    }
+});
+</script>
+</div>

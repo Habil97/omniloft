@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "İade/Değişim Talebi";
+    var orderId = ViewBag.OrderId;
+}
+<h2>İade/Değişim Talebi Oluştur</h2>
+<form asp-action="Create" method="post">
+    <input type="hidden" name="orderId" value="@orderId" />
+    <div class="mb-3">
+        <label>Talep Türü</label>
+        <select name="type" class="form-control" required>
+            <option value="İade">İade</option>
+            <option value="Değişim">Değişim</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Açıklama</label>
+        <textarea name="reason" class="form-control" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Talep Oluştur</button>
+</form>

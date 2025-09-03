@@ -1,0 +1,36 @@
+@model List<Verveo.Entities.ProductReview>
+<h2>Onay Bekleyen Yorumlar</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Kullanıcı</th>
+            <th>Ürün</th>
+            <th>Puan</th>
+            <th>Yorum</th>
+            <th>Tarih</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var review in Model)
+        {
+            <tr>
+                <td>@review.User?.Username</td>
+                <td>@review.Product?.Name</td>
+                <td>@review.Rating</td>
+                <td>@review.Comment</td>
+                <td>@review.CreatedAt.ToShortDateString()</td>
+                <td>
+                    <form asp-action="ApproveReview" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@review.Id" />
+                        <button type="submit" class="btn btn-success btn-sm">Onayla</button>
+                    </form>
+                    <a asp-action="EditReview" asp-route-id="@review.Id" class="btn btn-primary btn-sm">Düzenle</a>
+                    <form asp-action="DeleteReview" asp-route-id="@review.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

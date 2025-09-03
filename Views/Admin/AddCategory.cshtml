@@ -1,0 +1,19 @@
+@model Verveo.Entities.Category
+@{
+    ViewData["Title"] = "Kategori Ekle";
+}
+
+<div class="container py-5">
+    <h2 class="mb-4">Yeni Kategori Ekle</h2>
+    <form asp-action="AddCategory" method="post">
+        <div class="mb-3">
+            <label for="Name" class="form-label">Kategori Adı</label>
+            <input type="text" class="form-control" id="Name" name="Name" required />
+        </div>
+        <div class="mb-3">
+            <label for="Description" class="form-label">Açıklama</label>
+            <input type="text" class="form-control" id="Description" name="Description" />
+        </div>
+        <button type="submit" class="btn btn-primary">Ekle</button>
+    </form>
+</div>

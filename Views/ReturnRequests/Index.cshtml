@@ -1,0 +1,66 @@
+@using Verveo.Entities
+@model IEnumerable<Verveo.Entities.ReturnRequest>
+@{
+    ViewData["Title"] = "İade/Değişim Talepleri";
+}
+<h2>İade/Değişim Talepleri</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Kullanıcı</th>
+            <th>Sipariş</th>
+            <th>Tür</th>
+            <th>Açıklama</th>
+            <th>Durum</th>
+            <th>Tarih</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var req in Model)
+        {
+            <tr>
+                <td>@req.Id</td>
+                <td>@req.UserId</td>
+                <td>@req.OrderId</td>
+                <td>@req.Type</td>
+                <td>@req.Reason</td>
+                <td>@req.Status</td>
+                <td>@req.CreatedAt.ToString("g")</td>
+                <td>
+                    <form asp-action="UpdateStatus" asp-controller="ReturnRequest" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@req.Id" />
+                        <select name="status" class="form-select form-select-sm" style="width:120px;display:inline;">
+                            @if (req.Status == ReturnStatus.Beklemede)
+                            {
+                                <option value="Beklemede" selected>Beklemede</option>
+                            }
+                            else
+                            {
+                                <option value="Beklemede">Beklemede</option>
+                            }
+                            @if (req.Status == ReturnStatus.Onaylandi)
+                            {
+                                <option value="Onaylandi" selected>Onaylandı</option>
+                            }
+                            else
+                            {
+                                <option value="Onaylandi">Onaylandı</option>
+                            }
+                            @if (req.Status == ReturnStatus.Reddedildi)
+                            {
+                                <option value="Reddedildi" selected>Reddedildi</option>
+                            }
+                            else
+                            {
+                                <option value="Reddedildi">Reddedildi</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-success">Güncelle</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

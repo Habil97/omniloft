@@ -1,0 +1,125 @@
+﻿@model Verveo.Models.HomeViewModel
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+@if (Model.Sliders != null && Model.Sliders.Any())
+{
+    <div id="mainSlider" class="carousel slide mb-4" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @for (int i = 0; i < Model.Sliders.Count; i++)
+            {
+                var slider = Model.Sliders[i];
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <img src="@slider.ImagePath" class="d-block w-100" alt="@slider.Title" style="max-height:400px;object-fit:cover;">
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
+                        <h5>@slider.Title</h5>
+                        @if (!string.IsNullOrEmpty(slider.Description))
+                        {
+                            <p>@slider.Description</p>
+                        }
+                        @if (!string.IsNullOrEmpty(slider.ButtonUrl))
+                        {
+                            <a href="@slider.ButtonUrl" class="btn btn-primary">@slider.ButtonText ?? "Detay"</a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#mainSlider" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Önceki</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#mainSlider" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Sonraki</span>
+        </button>
+    </div>
+}
+else
+{
+    <div class="carousel-item active">
+        <img src="/images/default-banner.jpg" class="d-block w-100" style="max-height:400px;object-fit:cover;" alt="Banner" />
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
+            <h2 class="display-6 fw-bold">Modern ve Şık Ürünler</h2>
+            <p class="lead">En iyi tasarımlar, en iyi fiyatlarla verveo'da!</p>
+            <a href="/Product" class="btn btn-gradient-premium btn-lg px-4 py-2 fw-bold" style="text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:2rem;background:linear-gradient(90deg,#ffb347 0%,#ffcc33 100%);color:#fff;border:none;">Alışverişe Başla</a>
+        </div>
+    </div>
+}
+
+<section class="featured-products py-5">
+    <div class="container">
+        @if (TempData["NewsletterSuccess"] != null)
+        {
+            <div class="alert alert-success mb-4" style="border-radius:1rem;font-size:1.1rem;">
+                <i class="fas fa-check-circle me-2"></i> @TempData["NewsletterSuccess"]
+            </div>
+        }
+        <h2 class="mb-4">Kategoriler</h2>
+        <div class="row mb-5">
+            @foreach (var category in Model.Categories)
+            {
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 text-center shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@category.Name</h5>
+                            <p class="card-text">@category.Description</p>
+                            <a href="/Product/Category/@category.Id" class="btn btn-gradient-premium btn-sm px-3 py-1 fw-bold" style="text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:2rem;background:linear-gradient(90deg,#e96443 0%,#904e95 100%);color:#fff;border:none;">Ürünleri Gör</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @if (Model.FeaturedProducts != null && Model.FeaturedProducts.Any())
+        {
+            <section class="mt-5">
+                <h3 class="mb-4 fw-bold">Öne Çıkan Ürünler</h3>
+                <div class="row">
+                    @foreach (var product in Model.FeaturedProducts)
+                    {
+                        <div class="col-md-3 mb-4 d-flex">
+                            <div class="card shadow-sm w-100 d-flex flex-column h-100" style="min-height: 420px;">
+                                @if (!string.IsNullOrEmpty(product.ImagePath))
+                                {
+                                    var imageSrc = product.ImagePath.StartsWith("/images/") ? product.ImagePath : $"/images/{product.ImagePath}";
+                                    <img src="@imageSrc" class="card-img-top" alt="@product.Name" style="max-width:100%;max-height:180px;object-fit:contain;display:block;margin:auto;" />
+                                }
+                                <div class="card-body flex-grow-1 d-flex flex-column">
+                                    <h5 class="card-title">@product.Name</h5>
+                                    <p class="card-text text-muted"
+                                       style="min-height:48px; max-height:72px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;">
+                                        @product.Description
+                                    </p>
+                                </div>
+                                <div class="mt-auto d-flex flex-column align-items-center p-3">
+                                    <span class="badge bg-primary fs-6 mb-2" style="min-width:100px;text-align:center;">
+                                        @product.Price.ToString("C")
+                                </span>
+                                    <div class="d-flex gap-2 w-100 justify-content-center">
+                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id"
+                                           class="btn btn-gradient-premium px-4 py-2 fw-bold flex-fill"
+                                           style="text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:2rem;background:linear-gradient(90deg,#43cea2 0%,#185a9d 100%);color:#fff;border:none;min-width:120px;">
+                                            Detay
+                                        </a>
+                                        <form asp-controller="Cart" asp-action="AddToCart" method="post" style="display:inline;">
+                                            <input type="hidden" name="productId" value="@product.Id" />
+                                            <input type="hidden" name="quantity" value="1" />
+                                            <button type="submit"
+                                                    class="btn btn-gradient-premium px-4 py-2 fw-bold flex-fill"
+                                                    style="text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:2rem;background:linear-gradient(90deg,#ffb347 0%,#ffcc33 100%);color:#fff;border:none;min-width:120px;">
+                                                Sepete Ekle
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+    </div>
+</section>
+
+

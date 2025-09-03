@@ -1,0 +1,41 @@
+@model IEnumerable<Verveo.Entities.ReturnRequest>
+@{
+    ViewData["Title"] = "İade/Değişim Taleplerim";
+}
+<h2>İade/Değişim Taleplerim</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tarih</th>
+            <th>Sipariş</th>
+            <th>Tür</th>
+            <th>Açıklama</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var req in Model)
+        {
+            <tr>
+                <td>@req.CreatedAt.ToString("g")</td>
+                <td>@req.OrderId</td>
+                <td>@req.Type</td>
+                <td>@req.Reason</td>
+                <td>
+                    @if (req.Status == Verveo.Entities.ReturnStatus.Beklemede)
+                    {
+                        <span class="badge bg-warning">Beklemede</span>
+                    }
+                    else if (req.Status == Verveo.Entities.ReturnStatus.Onaylandi)
+                    {
+                        <span class="badge bg-success">Onaylandı</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Reddedildi</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

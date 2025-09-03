@@ -1,0 +1,36 @@
+@model Verveo.Entities.User
+@{
+    ViewData["Title"] = "Kayıt Ol";
+}
+
+<div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <div class="text-center mb-4">
+            <h2 class="mt-2">Kayıt Ol</h2>
+        </div>
+        <form asp-action="Register" method="post">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
+                </div>
+            }
+            <div class="mb-3">
+                <label for="Username" class="form-label">Kullanıcı Adı</label>
+                <input type="text" class="form-control" id="Username" name="Username" value="@Model?.Username" required />
+            </div>
+            <div class="mb-3">
+                <label for="Email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="Email" name="Email" value="@Model?.Email" required />
+            </div>
+            <div class="mb-3">
+                <label for="Password" class="form-label">Şifre</label>
+                <input type="password" class="form-control" id="Password" name="Password" required />
+            </div>
+            <button type="submit" class="btn btn-gradient-premium w-100 px-4 py-2 fw-bold" style="text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:2rem;background:linear-gradient(90deg,#ffb347 0%,#ffcc33 100%);color:#fff;border:none;">Kayıt Ol</button>
+        </form>
+    </div>
+</div>

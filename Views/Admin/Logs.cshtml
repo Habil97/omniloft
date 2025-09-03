@@ -1,0 +1,16 @@
+@model List<string>
+@{
+    ViewData["Title"] = "Hata ve İşlem Geçmişi";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">Hata ve İşlem Geçmişi</h2>
+    <div class="bg-light border rounded p-3" style="max-height:600px;overflow:auto;">
+        <pre style="font-size:13px;white-space:pre-wrap;">
+@foreach (var line in Model)
+{
+    @line
+}
+        </pre>
+    </div>
+</div>

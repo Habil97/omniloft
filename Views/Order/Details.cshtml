@@ -1,0 +1,12 @@
+@model Verveo.Entities.Order
+<h2>Sipariş Detayı</h2>
+<p><b>Tarih:</b> @Model.CreatedAt.ToString("dd.MM.yyyy")</p>
+<p><b>Durum:</b> @Model.Status</p>
+<p><b>Tutar:</b> @Model.Total.ToString("C")</p>
+<h4>Ürünler</h4>
+<ul>
+@foreach(var item in Model.Items)
+{
+    <li>@item.Product.Name - @item.Quantity adet - @item.Product.Price.ToString("C")</li>
+}
+</ul>

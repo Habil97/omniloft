@@ -1,0 +1,26 @@
+@model List<Verveo.Entities.FavoriteProduct>
+<h2>Favori Ürünlerim</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ürün</th>
+            <th>Fiyat</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var fav in Model)
+        {
+            <tr>
+                <td>@fav.Product.Name</td>
+                <td>@fav.Product.Price.ToString("C")</td>
+                <td>
+                    <form asp-action="RemoveFavorite" asp-route-productId="@fav.ProductId" method="post">
+                        <button type="submit" class="btn btn-danger btn-sm">Favoriden Çıkar</button>
+                    </form>
+                    <a asp-controller="Cart" asp-action="Add" asp-route-productId="@fav.ProductId" class="btn btn-success btn-sm">Sepete Ekle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

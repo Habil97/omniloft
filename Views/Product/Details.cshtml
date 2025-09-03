@@ -1,0 +1,175 @@
+@model Verveo.ViewModels.ProductDetailViewModel
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card shadow-sm mb-4">
+                <img src="@Model.Product.ImagePath" alt="@Model.Product.Name" class="card-img-top img-fluid" style="max-height:300px;object-fit:contain;" />
+            </div>
+            @if (Model.Product.Images != null && Model.Product.Images.Any())
+            {
+                <div class="row mb-3 justify-content-center">
+                    @foreach (var img in Model.Product.Images)
+                    {
+                        <div class="col-4 mb-2">
+                            <img src="@img.ImagePath"
+                                 class="img-fluid rounded shadow-sm gallery-thumb"
+                                 style="max-height:80px;object-fit:cover;cursor:pointer;"
+                                 data-bs-toggle="modal"
+                                 data-bs-target="#galleryModal"
+                                 data-img="@img.ImagePath" />
+                        </div>
+                    }
+                </div>
+            }
+            @if (Model.Features != null && Model.Features.Any())
+            {
+                <div class="card mt-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Ürün Özellikleri</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var feature in Model.Features)
+                        {
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="fw-bold">@feature.Name</span>
+                                <span>@feature.Value</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+        <div class="col-md-7">
+            <h2 class="fw-bold">@Model.Product.Name</h2>
+            <span class="badge bg-primary fs-5 mb-2">@Model.Product.Price.ToString("C")</span>
+            <p class="lead">@Model.Product.Description</p>
+            <div class="mb-3">
+                <span class="fw-bold">Stok:</span> @Model.Product.Stock
+            </div>
+            <div class="d-flex gap-2 mt-3">
+                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="m-0">
+                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+                    <input type="hidden" name="quantity" value="1" />
+                    <button type="submit" class="btn btn-success btn-lg px-4 rounded-pill shadow-sm d-flex align-items-center" style="gap:6px;">
+                        <i class="bi bi-cart-plus"></i>
+                        Sepete Ekle
+                    </button>
+                </form>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @if (!Model.IsFavorite)
+                    {
+                        <form asp-action="AddFavorite" asp-controller="User" asp-route-productId="@Model.Product.Id" method="post" class="m-0">
+                            <button type="submit" class="btn btn-outline-dark btn-lg px-4 rounded-pill shadow-sm d-flex align-items-center" style="gap:6px;">
+                                <i class="bi bi-heart"></i>
+                                Favorilere Ekle
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="RemoveFavorite" asp-controller="User" asp-route-productId="@Model.Product.Id" method="post" class="m-0">
+                            <button type="submit" class="btn btn-dark btn-lg px-4 rounded-pill shadow-sm d-flex align-items-center" style="gap:6px;">
+                                <i class="bi bi-heartbreak"></i>
+                                Favoriden Çıkar
+                            </button>
+                        </form>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Modal for Gallery -->
+<div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <img id="modalImage" src="" class="img-fluid w-100" alt="Büyük Görsel" style="object-fit:contain;max-height:500px;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var galleryThumbs = document.querySelectorAll('.gallery-thumb');
+    var modalImage = document.getElementById('modalImage');
+    galleryThumbs.forEach(function (thumb) {
+        thumb.addEventListener('click', function () {
+            var imgSrc = this.getAttribute('data-img');
+            modalImage.setAttribute('src', imgSrc);
+        });
+    });
+});
+</script>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-gradient bg-warning text-dark">
+                    <h5 class="mb-0">Kullanıcı Yorumları</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Reviews != null && Model.Reviews.Any())
+                    {
+                        <div class="reviews mt-2">
+                            @foreach (var review in Model.Reviews)
+                            {
+                                <div class="border rounded p-2 mb-2">
+                                    <strong>@review.User?.Username</strong>
+                                    <span class="text-warning">@((new string('★', review.Rating)))</span>
+                                    <span class="text-muted">@review.CreatedAt.ToShortDateString()</span>
+                                    <p>@review.Comment</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">Henüz yorum yapılmamış.</div>
+                    }
+                </div>
+            </div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-gradient bg-primary text-white">
+                        <h6 class="mb-0">Yorumunuzu Ekleyin</h6>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="AddReview" method="post">
+                            <input type="hidden" name="productId" value="@Model.Product.Id" />
+                            <div class="mb-2">
+                                <label class="form-label">Puan:</label>
+                                <select name="rating" class="form-select w-auto d-inline-block" required>
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Yorum:</label>
+                                <textarea name="comment" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success px-4">Yorum Gönder</button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    Yorum eklemek için <a asp-controller="User" asp-action="Login">giriş yapmalısınız</a>.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Icons CDN (layout dosyanızın <head> kısmına ekleyin) -->
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"> -->

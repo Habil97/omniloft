@@ -1,0 +1,42 @@
+@model Verveo.Entities.User
+@{
+    ViewData["Title"] = "Kullanıcı Düzenle";
+    var roles = ViewBag.Roles as List<Verveo.Entities.Role> ?? new List<Verveo.Entities.Role>();
+}
+
+<div class="container py-5">
+    <h2 class="mb-4">Kullanıcı Düzenle</h2>
+    <form asp-action="EditUser" method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <div class="mb-3">
+            <label for="Username" class="form-label">Kullanıcı Adı</label>
+            <input type="text" class="form-control" id="Username" name="Username" value="@Model.Username" required />
+        </div>
+        <div class="mb-3">
+            <label for="Email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
+        </div>
+        <div class="mb-3">
+            <label for="Password" class="form-label">Şifre</label>
+            <input type="password" class="form-control" id="Password" name="Password" value="" placeholder="Yeni şifre girin (değiştirmek için)" />
+        </div>
+        <div class="mb-3">
+            <label for="RoleId" class="form-label">Rol</label>
+            <select class="form-control" id="RoleId" name="RoleId" required>
+                <option value="">Rol Seçiniz</option>
+                @foreach (var role in roles)
+                {
+                    if (Model.RoleId == role.Id)
+                    {
+                        <option value="@role.Id" selected>@role.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@role.Id">@role.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+    </form>
+</div>

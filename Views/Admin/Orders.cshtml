@@ -1,0 +1,76 @@
+@model List<Verveo.Entities.Order>
+@{
+    ViewData["Title"] = "Sipariş Yönetimi";
+}
+
+<div class="container py-5">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <input type="text" id="orderSearch" class="form-control" placeholder="Kullanıcı ID, tarih veya durumuna göre ara..." />
+        </div>
+        <div class="col-md-3">
+            <select id="orderStatusFilter" class="form-select">
+                <option value="">Tümü</option>
+                <option value="Bekliyor">Bekliyor</option>
+                <option value="Tamamlandı">Tamamlandı</option>
+                <option value="İptal">İptal</option>
+            </select>
+        </div>
+    </div>
+    <h2 class="mb-4">Siparişler</h2>
+    <table class="table table-hover table-borderless shadow-sm rounded bg-white">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Kullanıcı ID</th>
+                <th>Tarih</th>
+                <th>Tutar</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody id="orderTableBody">
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td class="order-user">@order.UserId</td>
+                    <td class="order-date">@order.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@order.Total.ToString("C")</td>
+                    <td class="order-status">
+                        <form method="post" action="/Admin/UpdateOrderStatus" style="display:inline-flex;align-items:center;gap:6px;">
+                            <input type="hidden" name="orderId" value="@order.Id" />
+                            <select name="status" class="form-select form-select-sm" style="min-width:120px;">
+                                @foreach (var status in Enum.GetValues(typeof(Verveo.Entities.OrderStatus)))
+                                {
+                                    <option value="@status" selected="@(order.Status == (Verveo.Entities.OrderStatus)status ? "selected" : null)">@status</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-gradient-premium px-2 py-1">Kaydet</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('orderSearch');
+    const statusFilter = document.getElementById('orderStatusFilter');
+    const tableBody = document.getElementById('orderTableBody');
+    searchInput.addEventListener('input', filterOrders);
+    statusFilter.addEventListener('change', filterOrders);
+    function filterOrders() {
+        const search = searchInput.value.toLowerCase();
+        const status = statusFilter.value;
+        Array.from(tableBody.rows).forEach(row => {
+            const user = row.querySelector('.order-user').textContent.toLowerCase();
+            const date = row.querySelector('.order-date').textContent.toLowerCase();
+            const orderStatus = row.querySelector('.order-status').textContent;
+            const matchesSearch = user.includes(search) || date.includes(search);
+            const matchesStatus = !status || orderStatus === status;
+            row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+        });
+    }
+});
+</script>
+</div>

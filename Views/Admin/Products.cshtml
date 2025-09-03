@@ -1,0 +1,96 @@
+@model List<Verveo.Entities.Product>
+@{
+    ViewData["Title"] = "Ürün Yönetimi";
+}
+
+<div class="container py-5">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <input type="text" id="productSearch" class="form-control" placeholder="Ürün adı, açıklama veya kategoriye göre ara..." />
+        </div>
+        <div class="col-md-3">
+            <select id="productStatusFilter" class="form-select">
+                <option value="">Tümü</option>
+                <option value="Aktif">Aktif</option>
+                <option value="Pasif">Pasif</option>
+            </select>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Ürünler</h2>
+        <a href="/Admin/AddProduct" class="btn btn-primary px-4 py-2 fw-semibold rounded-pill shadow-sm">
+            <i class="bi bi-plus-circle"></i> Yeni Ürün Ekle
+        </a>
+    </div>
+    <table class="table table-hover table-borderless shadow-sm rounded bg-white">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Ad</th>
+                <th>Açıklama</th>
+                <th>Fiyat</th>
+                <th>Kategori</th>
+                <th>Görsel</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody id="productTableBody">
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>
+                        @(string.IsNullOrEmpty(product.Description)
+                            ? ""
+                            : string.Join(" ", product.Description.Split(' ').Take(15)) + (product.Description.Split(' ').Length > 15 ? "..." : ""))
+                    </td>
+                    <td>@product.Price.ToString("C")</td>
+                    <td>@product.CategoryId</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(product.ImagePath))
+                        {
+                            var imageSrc = product.ImagePath.StartsWith("/images/") ? product.ImagePath : $"/images/{product.ImagePath}";
+                            <img src="@imageSrc" alt="Ürün Görseli" style="max-width:60px;max-height:60px;" />
+                        }
+                    </td>
+                    <td class="product-status">@(product.IsActive ? "Aktif" : "Pasif")</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="/Admin/EditProduct/@product.Id" class="btn btn-primary btn-sm rounded-pill me-2 d-flex align-items-center" style="min-width:60px;">
+                                <i class="bi bi-pencil-square me-1"></i> Düzenle
+                            </a>
+                            <a href="/Admin/DeleteProduct/@product.Id" class="btn btn-danger btn-sm rounded-pill d-flex align-items-center" style="min-width:60px;"
+                               onclick="return confirm('Silmek istediğinize emin misiniz?');">
+                                <i class="bi bi-trash me-1"></i> Sil
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('productSearch');
+        const statusFilter = document.getElementById('productStatusFilter');
+        const tableBody = document.getElementById('productTableBody');
+        searchInput.addEventListener('input', filterProducts);
+        statusFilter.addEventListener('change', filterProducts);
+        function filterProducts() {
+            const search = searchInput.value.toLowerCase();
+            const status = statusFilter.value;
+            Array.from(tableBody.rows).forEach(row => {
+                const name = row.cells[1].textContent.toLowerCase();
+                const desc = row.cells[2].textContent.toLowerCase();
+                const cat = row.cells[4].textContent.toLowerCase();
+                const prodStatus = row.querySelector('.product-status').textContent;
+                const matchesSearch = name.includes(search) || desc.includes(search) || cat.includes(search);
+                const matchesStatus = !status || prodStatus === status;
+                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+            });
+        }
+    });
+    </script>
+</div>

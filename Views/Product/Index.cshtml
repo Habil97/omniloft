@@ -1,0 +1,163 @@
+@model IEnumerable<Verveo.Entities.Product>
+@{
+    ViewData["Title"] = "Ürünler";
+}
+
+<div class="container py-5">
+    <!-- Filtreleme ve Sıralama Paneli -->
+    <form method="get" class="mb-4" style="background:#f8f9fa;border-radius:1.5rem;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Kategori</label>
+                <select name="category" class="form-select">
+                    @if (string.IsNullOrEmpty(ViewBag.SelectedCategory))
+                    {
+                        <option value="" selected>Tümü</option>
+                    }
+                    else
+                    {
+                        <option value="">Tümü</option>
+                    }
+                    @foreach (var cat in ViewBag.Categories as List<Verveo.Entities.Category> ?? new List<Verveo.Entities.Category>())
+                    {
+                        if (ViewBag.SelectedCategory == cat.Id.ToString())
+                        {
+                            <option value="@cat.Id" selected>@cat.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-bold">Min Fiyat</label>
+                <input type="number" name="minPrice" class="form-control" value="@ViewBag.MinPrice" min="0" step="0.01" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-bold">Max Fiyat</label>
+                <input type="number" name="maxPrice" class="form-control" value="@ViewBag.MaxPrice" min="0" step="0.01" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Sırala</label>
+                <select name="sort" class="form-select">
+                    @if (string.IsNullOrEmpty(ViewBag.Sort))
+                    {
+                        <option value="" selected>Varsayılan</option>
+                    }
+                    else
+                    {
+                        <option value="">Varsayılan</option>
+                    }
+                    @if (ViewBag.Sort == "price_asc")
+                    {
+                        <option value="price_asc" selected>Fiyat (Artan)</option>
+                    }
+                    else
+                    {
+                        <option value="price_asc">Fiyat (Artan)</option>
+                    }
+                    @if (ViewBag.Sort == "price_desc")
+                    {
+                        <option value="price_desc" selected>Fiyat (Azalan)</option>
+                    }
+                    else
+                    {
+                        <option value="price_desc">Fiyat (Azalan)</option>
+                    }
+                    @if (ViewBag.Sort == "name_asc")
+                    {
+                        <option value="name_asc" selected>İsim (A-Z)</option>
+                    }
+                    else
+                    {
+                        <option value="name_asc">İsim (A-Z)</option>
+                    }
+                    @if (ViewBag.Sort == "name_desc")
+                    {
+                        <option value="name_desc" selected>İsim (Z-A)</option>
+                    }
+                    else
+                    {
+                        <option value="name_desc">İsim (Z-A)</option>
+                    }
+                    @if (ViewBag.Sort == "featured")
+                    {
+                        <option value="featured" selected>Öne Çıkanlar</option>
+                    }
+                    else
+                    {
+                        <option value="featured">Öne Çıkanlar</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-gradient-premium fw-bold">Filtrele</button>
+            </div>
+        </div>
+    </form>
+    @if (!string.IsNullOrEmpty(ViewData["q"] as string))
+    {
+        <h2 class="mb-4">Arama Sonuçları: <span class="text-primary">@ViewData["q"]</span></h2>
+    }
+    else
+    {
+        <h2 class="mb-4"></h2>
+    }
+    <div class="row">
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center py-5">
+                <div class="alert alert-warning" style="border-radius:1.5rem;max-width:400px;margin:auto;">
+                    <span>Bu kategori de kayıtlı bir ürün yok.</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var product in Model)
+            {
+                <div class="col-md-3 mb-4 d-flex">
+                    <div class="card shadow-sm w-100 d-flex flex-column h-100" style="min-height: 420px;">
+                        @if (!string.IsNullOrEmpty(product.ImagePath))
+                        {
+                            var imageSrc = product.ImagePath.StartsWith("/images/") ? product.ImagePath : $"/images/{product.ImagePath}";
+                            <img src="@imageSrc" class="card-img-top" alt="@product.Name" style="max-width:100%;max-height:180px;object-fit:contain;display:block;margin:auto;" />
+                        }
+                        <div class="card-body flex-grow-1 d-flex flex-column">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text text-muted"
+                               style="min-height:48px; max-height:72px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;">
+                                @product.Description
+                            </p>
+                        </div>
+                        <div class="mt-auto d-flex flex-column align-items-center p-3">
+                            <span class="badge bg-primary fs-6 mb-2" style="min-width:100px;text-align:center;">
+                                @product.Price.ToString("C")
+                            </span>
+                            <div class="d-flex gap-2 w-100 justify-content-center">
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id"
+                                   class="btn btn-gradient-premium px-4 py-2 fw-bold flex-fill"
+                                   style="text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:2rem;background:linear-gradient(90deg,#43cea2 0%,#185a9d 100%);color:#fff;border:none;min-width:120px;">
+                                    Detay
+                                </a>
+                                <form asp-controller="Cart" asp-action="AddToCart" method="post" style="display:inline;">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <input type="hidden" name="quantity" value="1" />
+                                    <button type="submit"
+                                            class="btn btn-gradient-premium px-4 py-2 fw-bold flex-fill"
+                                            style="text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:2rem;background:linear-gradient(90deg,#ffb347 0%,#ffcc33 100%);color:#fff;border:none;min-width:120px;">
+                                        Sepete Ekle
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+<link rel="stylesheet" href="/wwwroot/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="/wwwroot/css/style.css">

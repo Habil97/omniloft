@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omnilof - Sıkça Sorulan Sorular</title>
+    <style>
+        :root {
+            --primary-color: #4a6de5;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ff6b6b;
+            --text-color: #333;
+            --light-gray: #e9ecef;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7ff;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #2c4fd6);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 109, 229, 0.2);
+        }
+        
+        .search-box button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .search-box button:hover {
+            background: #3a5bd0;
+        }
+        
+        .faq-categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .category-btn {
+            padding: 12px 25px;
+            background: white;
+            border: 2px solid var(--light-gray);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .faq-question:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 20px 20px;
+        }
+        
+        .icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .icon {
+            transform: rotate(180deg);
+        }
+        
+        .contact-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-top: 50px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .contact-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .contact-options {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .contact-option {
+            flex: 1;
+            min-width: 250px;
+            background: var(--secondary-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            transition: transform 0.3s ease;
+        }
+        
+        .contact-option:hover {
+            transform: translateY(-5px);
+        }
+        
+        .contact-option h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            color: #6c757d;
+            border-top: 1px solid var(--light-gray);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">omniloft</div>
+            <div class="tagline">Sınırsız Seçenek, Tek Adres</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">Sıkça Sorulan Sorular</h1>
+        
+        <div class="search-box">
+            <input type="text" placeholder="Sorunuzu buraya yazın...">
+            <button>Ara</button>
+        </div>
+        
+        <div class="faq-categories">
+            <button class="category-btn active">Tümü</button>
+            <button class="category-btn">Sipariş & Ödeme</button>
+            <button class="category-btn">Teslimat & Kargo</button>
+            <button class="category-btn">İade & Değişim</button>
+            <button class="category-btn">Hesap & Teknik Destek</button>
+        </div>
+        
+        <div class="faq-container">
+            <!-- Sipariş & Ödeme -->
+            <div class="faq-item" data-category="sipariş-ödeme">
+                <div class="faq-question">
+                    Siparişimi nasıl verebilirim?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Omnilof'ta alışveriş yapmak çok kolay! Beğendiğiniz ürünü sepete ekleyin, "Sepeti Görüntüle" butonuna tıklayın. Ödeme sayfasına geçerek teslimat ve fatura bilgilerinizi girin, size en uygun ödeme yöntemini seçin ve siparişinizi tamamlayın. Sipariş onay e-postası adresinize kısa sürede iletilecektir.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="sipariş-ödeme">
+                <div class="faq-question">
+                    Hangi ödeme yöntemlerini kabul ediyorsunuz?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Kredi/Banka kartı (tüm major kartlar ile Visa, MasterCard, Troy), debit kart, kapıda nakit ödeme, kapıda kredi kartı ile ödeme ve banka havalesi/EFT seçeneklerini sunmaktayız. Tüm ödeme işlemleriniz 256-bit SSL sertifikası ile güvence altındadır.</p>
+                </div>
+            </div>
+            
+            <!-- Teslimat & Kargo -->
+            <div class="faq-item" data-category="teslimat-kargo">
+                <div class="faq-question">
+                    Kargo ücreti ne kadar?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Belirli bir tutarın altındaki siparişlerde sembolik bir kargo ücreti alınmaktadır. [XXX TL] ve üzeri tüm siparişlerde kargo ÜCRETSİZDİR. Güncel kargo ücret tablosuna [buradan] ulaşabilirsiniz.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="teslimat-kargo">
+                <div class="faq-question">
+                    Siparişim ne zaman elime ulaşır?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Standart teslimat süremiz, siparişin onaylanmasından sonra iş günü içerisindedir. Teslimat süreleri, bulunduğunuz şehre ve kargo firmasının yoğunluğuna göre 1-3 iş günü daha uzayabilir. Özel kampanya dönemlerinde bu sürelerde artış olabilir, bu durum önceden duyurulur.</p>
+                </div>
+            </div>
+            
+            <!-- İade & Değişim -->
+            <div class="faq-item" data-category="iade-değişim">
+                <div class="faq-question">
+                    Ürünü iade etmek veya değiştirmek istiyorum. Nasıl bir süreç işleyecek?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p><strong>Mesafeli Satış Sözleşmesi</strong> kapsamında, ürünlerinizi teslimat tarihinden itibaren <strong>14 gün içinde</strong> herhangi bir sebep göstermeden iade edebilir veya değişim talebinde bulunabilirsiniz. Ürünün orijinal ambalajında, hasarsız, etiketleriyle ve faturayla birlikte olması gerekmektedir.</p>
+                    <p>İade/değişim sürecini başlatmak için "Hesabım" > "Siparişlerim" bölümünden ilgili siparişiniz için iade talebi oluşturabilir veya müşteri hizmetlerimizle iletişime geçebilirsiniz. Size göndereceğimiz kargo etiketi ile ücretsiz olarak kargolayabilirsiniz.</p>
+                </div>
+            </div>
+            
+            <!-- Hesap & Teknik Destek -->
+            <div class="faq-item" data-category="hesap-destek">
+                <div class="faq-question">
+                    Web sitesinde hesap oluşturmak zorunda mıyım?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Hesap oluşturmadan misafir olarak alışveriş yapabilirsiniz. Ancak, siparişlerinizi takip etmek, iade süreçlerini yönetmek, indirim kuponlarından haberdar olmak ve daha hızlı alışveriş yapabilmek için bir hesap oluşturmanızı öneririz.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="hesap-destek">
+                <div class="faq-question">
+                    Aldığım ürünle ilgili teknik bir sorun var veya ürün hasarlı geldi. Ne yapmalıyım?
+                    <span class="icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Lütfen derhal müşteri hizmetlerimizi arayın ( [Telefon Numarası] ) veya [destek@omnilof.com] adresine ürün fotoğraflarını/faturasını ekleyerek e-posta gönderin. Size en hızlı şekilde çözüm sunacağız.</p>
+                </div>
+            </div>
+        </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // FAQ açılıp kapanma
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', () => {
+                    item.classList.toggle('active');
+                });
+            });
+            
+            // Kategori filtreleme
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            const faqItemsAll = document.querySelectorAll('.faq-item');
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Aktif buton sınıfını güncelle
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    const category = button.textContent.trim();
+                    
+                    // Tüm FAQ öğelerini göster/gizle
+                    faqItemsAll.forEach(item => {
+                        if (category === 'Tümü') {
+                            item.style.display = 'block';
+                        } else {
+                            const itemCategory = item.getAttribute('data-category');
+                            const categoryMap = {
+                                'Sipariş & Ödeme': 'sipariş-ödeme',
+                                'Teslimat & Kargo': 'teslimat-kargo',
+                                'İade & Değişim': 'iade-değişim',
+                                'Hesap & Teknik Destek': 'hesap-destek'
+                            };
+                            
+                            if (categoryMap[category] === itemCategory) {
+                                item.style.display = 'block';
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Arama fonksiyonu
+            const searchInput = document.querySelector('.search-box input');
+            const searchButton = document.querySelector('.search-box button');
+            
+            function performSearch() {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                faqItemsAll.forEach(item => {
+                    const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                    const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                    
+                    if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                        item.style.display = 'block';
+                        item.classList.add('active'); // Eşleşen öğeyi aç
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Tümü butonunu aktif yap
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                categoryButtons[0].classList.add('active');
+            }
+            
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

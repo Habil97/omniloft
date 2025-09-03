@@ -1,0 +1,46 @@
+@model Verveo.Entities.Slider
+@{
+    ViewData["Title"] = "Slider Düzenle";
+}
+<div class="container py-5">
+    <h2 class="mb-4">Slider Düzenle</h2>
+    <form asp-action="EditSlider" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <div class="mb-3">
+            <label for="Title" class="form-label">Başlık</label>
+            <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required />
+        </div>
+        <div class="mb-3">
+            <label for="Description" class="form-label">Açıklama</label>
+            <input type="text" class="form-control" id="Description" name="Description" value="@Model.Description" />
+        </div>
+        <div class="mb-3">
+            <label for="ImageFile" class="form-label">Slider Görseli</label>
+            <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" />
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                var imageSrc = Model.ImagePath.StartsWith("/images/") ? Model.ImagePath : $"/images/{Model.ImagePath}";
+                <div class="mt-2">
+                    <img src="@imageSrc" alt="Mevcut Görsel" style="max-width:120px;max-height:120px;" />
+                </div>
+            }
+        </div>
+        <div class="mb-3">
+            <label for="ButtonText" class="form-label">Buton Metni</label>
+            <input type="text" class="form-control" id="ButtonText" name="ButtonText" value="@Model.ButtonText" />
+        </div>
+        <div class="mb-3">
+            <label for="ButtonUrl" class="form-label">Buton Linki</label>
+            <input type="text" class="form-control" id="ButtonUrl" name="ButtonUrl" value="@Model.ButtonUrl" />
+        </div>
+        <div class="mb-3">
+            <label for="Order" class="form-label">Sıra</label>
+            <input type="number" class="form-control" id="Order" name="Order" value="@Model.Order" />
+        </div>
+        <div class="form-check mb-3">
+            <input type="checkbox" name="IsActive" value="true" @(Model.IsActive ? "checked" : "") />
+            <label class="form-check-label" for="IsActive">Aktif mi?</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+    </form>
+</div>

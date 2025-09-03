@@ -1,0 +1,74 @@
+@model Verveo.Models.CheckoutViewModel
+@{
+    ViewData["Title"] = "Güvenli Ödeme";
+}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4">
+                <h2 class="mb-4 text-center">Güvenli Ödeme</h2>
+                <form asp-action="Checkout" asp-controller="Cart" method="post">
+                    <h5 class="mb-3">Kullanıcı Bilgileri</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Ad Soyad</label>
+                        <input asp-for="FullName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">E-posta</label>
+                        <input asp-for="Email" class="form-control" type="email" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefon</label>
+                        <input asp-for="Phone" class="form-control" required />
+                    </div>
+                    <h5 class="mb-3">Adres Bilgileri</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Adres</label>
+                        <textarea asp-for="Address" class="form-control" rows="2" required></textarea>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">İl</label>
+                            <input asp-for="City" class="form-control" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">İlçe</label>
+                            <input asp-for="District" class="form-control" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Posta Kodu</label>
+                            <input asp-for="PostalCode" class="form-control" required />
+                        </div>
+                    </div>
+                    <h5 class="mb-3">Kart Bilgileri</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Kart Üzerindeki İsim</label>
+                        <input asp-for="CardName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kart Numarası</label>
+                        <input asp-for="CardNumber" class="form-control" maxlength="16" required />
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label">Son Kullanma (AA/YY)</label>
+                            <input asp-for="CardExpiry" class="form-control" maxlength="5" placeholder="MM/YY" required />
+                        </div>
+                        <div class="col">
+                            <label class="form-label">CVV</label>
+                            <input asp-for="CardCvv" class="form-control" maxlength="4" required />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-lg w-100 fw-bold" style="border-radius:2rem;">Ödemeyi Tamamla</button>
+                </form>
+                @if (ViewBag.PaymentMessage != null)
+                {
+                    <div class="alert alert-info mt-4 text-center">@ViewBag.PaymentMessage</div>
+                }
+                <div class="text-center mt-4">
+                    <a asp-action="Index" asp-controller="Cart" class="btn btn-outline-secondary">Sepete Dön</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
